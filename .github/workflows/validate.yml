@@ -4,6 +4,10 @@ on:
   pull_request:
   push:
     branches: [main]
+  # 서명된 목록은 30일 뒤 만료된다. 주 1회 확인해 만료 7일 전부터 실패로 알린다
+  # (메인테이너가 build-index --renew → sign-index로 다시 서명할 때다).
+  schedule:
+    - cron: "17 3 * * 1"
 
 permissions:
   contents: read
@@ -23,11 +27,11 @@ jobs:
       - name: 위젯 규칙 검사
         if: github.event_name == 'pull_request'
         run: swift tools/build-index.swift --validate
-      # main: 커밋된 index.json이 widgets/와 같고 서명·해시가 맞는지 확인한다.
+      # main: 커밋된 index.json이 widgets/와 같고 서명·해시·만료가 맞는지 확인한다.
       # PR을 병합한 직후에는 메인테이너가 서명된 index를 올리기 전까지 실패한다.
-      - name: index.json 일치 확인
-        if: github.event_name == 'push'
+      - name: index.json 일치·만료 확인
+        if: github.event_name != 'pull_request'
         run: swift tools/build-index.swift --check
       - name: 서명·해시 확인
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         run: swift tools/verify-index.swift "$INDEX_PUBLIC_KEY"

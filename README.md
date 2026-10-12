@@ -19,7 +19,8 @@
    없다.
 3. **앱의 확인.**
    - 앱에 박힌 공개키로 `index.json.sig`를 검증한다. 맞지 않으면 목록 전체를 버린다.
-   - `sequence`가 이전에 본 값보다 작으면 거부한다(옛 목록으로 되돌리기 공격 방지).
+   - `sequence`가 이전에 본 값(처음이면 앱에 박힌 하한)보다 작으면 거부한다(옛 목록으로 되돌리기 공격 방지).
+   - `expiresAt`(서명 후 30일)이 지난 목록으로는 설치·업데이트를 하지 않는다(목록 동결 방지).
    - 파일마다 `index.json`에 적힌 크기와 SHA-256이 맞아야 설치한다.
    - 설치 후에는 일반 사용자 위젯과 똑같이 권한 승인과 폴더 지문 확인을 거친다.
 
@@ -42,10 +43,24 @@ pwO6l6HlEPMEaOxjIrBNZsjC5yPWHJvhQFsfuiZ+DXU=
 
 ```sh
 git pull
-swift tools/build-index.swift            # 검사 + index.json 갱신(sequence +1)
+swift tools/build-index.swift            # 검사 + index.json 갱신(sequence +1, 만료 30일 뒤)
 swift tools/sign-index.swift             # Keychain 키로 index.json.sig 작성
 swift tools/verify-index.swift pwO6l6HlEPMEaOxjIrBNZsjC5yPWHJvhQFsfuiZ+DXU=
 git add index.json index.json.sig && git commit -m "index: <id> <버전> 반영" && git push
+```
+
+## 메인테이너: 매달 다시 서명하기
+
+> **`index.json`은 서명 후 30일에 만료된다. 적어도 한 달에 한 번은 다시 서명한다.**
+> 만료된 목록으로는 앱이 설치·업데이트를 하지 않는다. CI(Validate)가 주 1회 돌아
+> 만료 7일 전부터 실패하므로, 그 알림을 받으면 아래를 실행한다.
+
+```sh
+git pull
+swift tools/build-index.swift --renew    # 위젯이 그대로여도 sequence +1, 만료 연장
+swift tools/sign-index.swift
+swift tools/verify-index.swift pwO6l6HlEPMEaOxjIrBNZsjC5yPWHJvhQFsfuiZ+DXU=
+git add index.json index.json.sig && git commit -m "index: 서명 갱신" && git push
 ```
 
 처음 한 번은 `swift tools/keygen.swift`로 키를 만든다(이미 있으면 그대로 쓰고 공개키만 출력한다).
@@ -61,7 +76,9 @@ Community widget marketplace for **betterDock**, a macOS Dock app with manifest-
   downloads each file and verifies its size and SHA-256. Widgets that use shell or network
   permissions still show the app's permission consent dialog.
 - **Trust:** every widget is reviewed by the maintainer via PR. The index is signed with a key
-  that lives only in the maintainer's Mac Keychain — never in this repo or CI.
+  that lives only in the maintainer's Mac Keychain — never in this repo or CI. The signed index
+  expires 30 days after signing (`expiresAt`); the maintainer re-signs it at least monthly
+  (`build-index --renew`), and the app refuses installs/updates from an expired index.
 - **Submit:** add `widgets/<id>/` with `manifest.json` + `market.json`, run
   `swift tools/build-index.swift --validate`, open a PR. Do not edit `index.json` or its signature.
   See [CONTRIBUTING.md](CONTRIBUTING.md) (Korean) for the rules.

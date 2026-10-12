@@ -3,6 +3,12 @@
 //   swift tools/build-index.swift             검사 후 index.json을 새로 쓴다(내용이 같으면 그대로 둔다)
 //   swift tools/build-index.swift --check     검사 + 커밋된 index.json이 지금 widgets/와 같은지 확인(CI)
 //   swift tools/build-index.swift --validate  규칙 검사만 한다(index.json은 보지 않는다. PR CI)
+//   swift tools/build-index.swift --renew     위젯이 그대로여도 새로 쓴다(sequence +1, 만료 30일 연장)
+//
+// `expiresAt`은 언제나 `generatedAt` + 30일이다. 앱은 만료된 목록으로 설치·업데이트를 하지
+// 않는다 — 옛 서명 목록을 계속 되돌려 주는 것(동결 공격)으로 새 위젯·철회를 숨기지 못하게
+// 한다. 그래서 위젯이 바뀌지 않아도 **한 달 안에 --renew로 다시 만들고 서명해야** 한다.
+// `--check`는 만료가 7일 안으로 다가오면 실패해 CI(주 1회 예약 실행)가 알린다.
 //
 // 저장소 루트에서 실행한다. 규칙은 betterDock 앱의 사용자 위젯 규칙
 // (`Sources/BetterDock/UserWidgetPolicy.swift`)을 그대로 옮기고, 마켓에서만 더 좁힌 것은
@@ -28,6 +34,8 @@ let 카테고리: Set<String> = ["system", "time", "developer", "apps", "other"]
 let 소스종류: Set<String> = ["static", "shell", "http", "builtin"]
 let 권한종류: Set<String> = ["network", "shell"]
 let market키: Set<String> = ["author", "description", "category", "version", "minAppVersion", "changelog", "homepage"]
+let 유효기간: TimeInterval = 30 * 24 * 60 * 60
+let 갱신여유일 = 7
 
 struct Violation: Error { let message: String }
 func fail(_ message: String) -> Violation { Violation(message: message) }
@@ -329,9 +337,10 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
             throw fail("로컬 이미지는 위젯 폴더 안 파일의 상대 경로여야 한다: \(s)")
         }
     }
+    var openURLOrigins = Set<String>()
     for value in openURLs {
         guard let s = value as? String else { throw fail("openURL 값은 문자열이어야 한다") }
-        _ = try literalHTTPSOrigin(s, what: "openURL")
+        openURLOrigins.insert(try literalHTTPSOrigin(s, what: "openURL"))
     }
 
     // 권한은 쓰는 만큼만, 쓰는 것은 빠짐없이.
@@ -392,6 +401,7 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
         "shell": shellArgv.map { ["argv": $0] as Any } ?? NSNull(),
         "httpOrigins": httpOrigins,
         "imageOrigins": imageOrigins.sorted(),
+        "openURLOrigins": openURLOrigins.sorted(),
         "builtinKinds": builtinKinds,
         "files": fileList,
         "changelog": changelog,
@@ -410,8 +420,8 @@ func serialize(_ document: [String: Any]) -> Data {
 
 let arguments = Array(CommandLine.arguments.dropFirst())
 let mode = arguments.first ?? "--write"
-guard ["--write", "--check", "--validate"].contains(mode), arguments.count <= 1 else {
-    FileHandle.standardError.write("사용법: swift tools/build-index.swift [--check | --validate]\n".data(using: .utf8)!)
+guard ["--write", "--check", "--validate", "--renew"].contains(mode), arguments.count <= 1 else {
+    FileHandle.standardError.write("사용법: swift tools/build-index.swift [--check | --validate | --renew]\n".data(using: .utf8)!)
     exit(2)
 }
 
@@ -447,14 +457,23 @@ guard problems.isEmpty else {
 print("✓ 위젯 \(widgets.count)개 검사 통과")
 if mode == "--validate" { exit(0) }
 
-func document(generatedAt: String, sequence: Int) -> [String: Any] {
-    ["schemaVersion": 1, "generatedAt": generatedAt, "sequence": sequence, "widgets": widgets]
+let formatter = ISO8601DateFormatter()
+formatter.timeZone = TimeZone(identifier: "UTC")
+formatter.formatOptions = [.withInternetDateTime]
+
+/// `expiresAt`은 `generatedAt`에서만 나온다. 그래서 `--check`가 두 값을 따로 믿지 않고
+/// 다시 계산해 바이트로 비교할 수 있다(손으로 늘린 만료는 걸린다).
+func document(generatedAt: String, sequence: Int) -> [String: Any]? {
+    guard let generated = formatter.date(from: generatedAt) else { return nil }
+    return ["schemaVersion": 1, "generatedAt": generatedAt,
+            "expiresAt": formatter.string(from: generated.addingTimeInterval(유효기간)),
+            "sequence": sequence, "widgets": widgets]
 }
 
 var previous: (data: Data, generatedAt: String, sequence: Int)?
 if let data = try? Data(contentsOf: indexURL) {
     guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-          let generatedAt = object["generatedAt"] as? String,
+          let generatedAt = object["generatedAt"] as? String, formatter.date(from: generatedAt) != nil,
           let seq = object["sequence"] as? NSNumber, !isBool(seq), seq.doubleValue >= 1,
           seq.doubleValue == seq.doubleValue.rounded() else {
         FileHandle.standardError.write("✗ 기존 index.json을 읽을 수 없다(generatedAt·sequence 확인)\n".data(using: .utf8)!)
@@ -468,25 +487,29 @@ if mode == "--check" {
         FileHandle.standardError.write("✗ index.json이 없다. swift tools/build-index.swift를 실행하라.\n".data(using: .utf8)!)
         exit(1)
     }
-    let expected = serialize(document(generatedAt: previous.generatedAt, sequence: previous.sequence))
+    let expected = serialize(document(generatedAt: previous.generatedAt, sequence: previous.sequence)!)
     guard expected == previous.data else {
-        FileHandle.standardError.write("✗ index.json이 widgets/와 다르다. build-index → sign-index를 실행해 커밋하라.\n".data(using: .utf8)!)
+        FileHandle.standardError.write("✗ index.json이 widgets/와 다르다(expiresAt 포함). build-index → sign-index를 실행해 커밋하라.\n".data(using: .utf8)!)
         exit(1)
     }
     print("✓ index.json이 widgets/와 일치한다(sequence \(previous.sequence))")
+    let expires = formatter.date(from: previous.generatedAt)!.addingTimeInterval(유효기간)
+    let 남은일 = Int(expires.timeIntervalSinceNow / 86_400)
+    guard expires.timeIntervalSinceNow > TimeInterval(갱신여유일 * 86_400) else {
+        FileHandle.standardError.write("✗ index.json이 \(formatter.string(from: expires))에 만료된다(\(남은일)일 남음). swift tools/build-index.swift --renew → sign-index를 실행해 커밋하라.\n".data(using: .utf8)!)
+        exit(1)
+    }
+    print("✓ 만료 \(formatter.string(from: expires)) (\(남은일)일 남음)")
     exit(0)
 }
 
-if let previous,
-   serialize(document(generatedAt: previous.generatedAt, sequence: previous.sequence)) == previous.data {
+if mode != "--renew", let previous,
+   serialize(document(generatedAt: previous.generatedAt, sequence: previous.sequence)!) == previous.data {
     print("변경 없음: index.json을 그대로 둔다(sequence \(previous.sequence))")
     exit(0)
 }
-let formatter = ISO8601DateFormatter()
-formatter.timeZone = TimeZone(identifier: "UTC")
-formatter.formatOptions = [.withInternetDateTime]
 let sequence = (previous?.sequence ?? 0) + 1
-let output = serialize(document(generatedAt: formatter.string(from: Date()), sequence: sequence))
+let output = serialize(document(generatedAt: formatter.string(from: Date()), sequence: sequence)!)
 do {
     try output.write(to: indexURL, options: .atomic)
 } catch {

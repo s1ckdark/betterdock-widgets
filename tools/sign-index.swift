@@ -39,6 +39,12 @@ guard let object = try? JSONSerialization.jsonObject(with: index) as? [String: A
       object["schemaVersion"] as? Int == 1, object["sequence"] is NSNumber else {
     die("index.json 형식이 맞지 않는다. swift tools/build-index.swift로 다시 만들어라.")
 }
+// 이미 지난 만료로 서명하면 앱이 설치를 막는 목록을 내보내는 셈이다.
+let iso = ISO8601DateFormatter()
+iso.formatOptions = [.withInternetDateTime]
+guard let expiresText = object["expiresAt"] as? String, let expires = iso.date(from: expiresText), expires > Date() else {
+    die("index.json의 expiresAt이 없거나 지났다. swift tools/build-index.swift --renew로 다시 만들어라.")
+}
 
 guard let signature = try? key.signature(for: index) else { die("서명하지 못했다") }
 guard key.publicKey.isValidSignature(signature, for: index) else { die("방금 만든 서명이 검증되지 않는다") }
@@ -47,5 +53,5 @@ do {
 } catch {
     die("index.json.sig를 쓰지 못했다: \(error)")
 }
-print("✓ index.json.sig를 썼다(sequence \(object["sequence"]!)).")
+print("✓ index.json.sig를 썼다(sequence \(object["sequence"]!), 만료 \(expiresText)).")
 print("공개키: \(key.publicKey.rawRepresentation.base64EncodedString())")

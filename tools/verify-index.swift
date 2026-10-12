@@ -32,6 +32,14 @@ print("✓ 서명 확인")
 guard let object = try? JSONSerialization.jsonObject(with: index) as? [String: Any],
       object["schemaVersion"] as? Int == 1, let sequence = object["sequence"] as? Int,
       let widgets = object["widgets"] as? [[String: Any]] else { die("index.json 형식이 맞지 않는다") }
+// 앱은 `expiresAt`이 없으면 목록 전체를, 지났으면 설치·업데이트를 거부한다.
+let iso = ISO8601DateFormatter()
+iso.formatOptions = [.withInternetDateTime]
+guard let expiresText = object["expiresAt"] as? String, let expires = iso.date(from: expiresText) else {
+    die("index.json에 expiresAt(ISO 8601 UTC)이 없다")
+}
+guard expires > Date() else { die("index.json이 \(expiresText)에 만료됐다. build-index --renew → sign-index를 실행하라.") }
+print("✓ 만료 \(expiresText)")
 
 func safe(_ component: String) -> Bool {
     component.range(of: #"^[A-Za-z0-9_-][A-Za-z0-9._-]*\z"#, options: .regularExpression) != nil
