@@ -1,0 +1,12 @@
+{
+  "author": "s1ckdark",
+  "description": {
+    "ko": "부팅 후 지난 시간과 1분 평균 부하를 보여 주는 예제 셸 위젯",
+    "en": "Example shell widget showing time since boot and the 1-minute load average"
+  },
+  "category": "system",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "첫 버전",
+  "homepage": "https://github.com/s1ckdark/betterdock-widgets/tree/main/widgets/example-uptime"
+}

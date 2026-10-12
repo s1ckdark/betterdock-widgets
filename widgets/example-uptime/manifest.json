@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "example-uptime",
+  "name": "가동 시간",
+  "version": "1.0.0",
+  "category": "system",
+  "permissions": ["shell"],
+  "settings": [],
+  "data": {
+    "source": {
+      "type": "shell",
+      "command": "/bin/sh",
+      "args": ["uptime.sh"]
+    },
+    "refresh": { "every": "1m" }
+  },
+  "compact": {
+    "hstack": [
+      { "icon": "clock.arrow.circlepath", "tint": "accent" },
+      { "text": "{{ .label }}", "style": "caption" }
+    ],
+    "tooltip": "부팅 후 {{ .label }} · 1분 평균 부하 {{ .load1 }}"
+  }
+}

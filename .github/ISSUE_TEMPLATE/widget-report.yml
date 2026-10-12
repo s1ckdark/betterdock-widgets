@@ -1,0 +1,36 @@
+name: 위젯 문제 제보
+description: 마켓 위젯의 오류나 보안·사칭 등 문제를 알립니다
+title: "[제보] "
+labels: ["위젯 제보"]
+body:
+  - type: input
+    id: widget
+    attributes:
+      label: 위젯 id와 버전
+      placeholder: example-uptime 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 종류
+      options:
+        - 동작하지 않음 / 잘못 표시됨
+        - 설치 실패(서명·해시 확인 실패 포함)
+        - 보안 문제(설명과 다른 동작, 정보 유출 의심)
+        - 사칭·부적절한 내용
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: 내용
+      description: 무엇을 했고, 무엇을 기대했고, 실제로 무엇이 일어났는지 적어 주세요. 위젯 툴팁의 오류 문구가 있으면 붙여 주세요. 토큰·비밀번호는 적지 마세요.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: 앱 버전 / macOS 버전
+      placeholder: betterDock 0.1.0 / macOS 26.0

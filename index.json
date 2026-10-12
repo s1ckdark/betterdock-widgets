@@ -1,0 +1,56 @@
+{
+  "generatedAt" : "2026-10-12T14:16:27Z",
+  "schemaVersion" : 1,
+  "sequence" : 1,
+  "widgets" : [
+    {
+      "author" : "s1ckdark",
+      "builtinKinds" : [
+
+      ],
+      "category" : "system",
+      "changelog" : "첫 버전",
+      "description" : {
+        "en" : "Example shell widget showing time since boot and the 1-minute load average",
+        "ko" : "부팅 후 지난 시간과 1분 평균 부하를 보여 주는 예제 셸 위젯"
+      },
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "67afcea9f52eb09da755f34ca0e26f13c45bfef2f281ac72bc16bc5517bd254b",
+          "size" : 556
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "9ac36b6410951bb760ffdc8e778391f726c6aa6adc1e8d49986d59e7680a4b1d",
+          "size" : 433
+        },
+        {
+          "path" : "uptime.sh",
+          "sha256" : "59af89d039c07786348d9ca38bfe364f4bc1f46348ddaf3e8621c3904814a74b",
+          "size" : 863
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterdock-widgets/tree/main/widgets/example-uptime",
+      "httpOrigins" : [
+
+      ],
+      "id" : "example-uptime",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "가동 시간",
+      "permissions" : [
+        "shell"
+      ],
+      "shell" : {
+        "argv" : [
+          "/bin/sh",
+          "uptime.sh"
+        ]
+      },
+      "version" : "1.0.0"
+    }
+  ]
+}

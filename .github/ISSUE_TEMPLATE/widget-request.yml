@@ -1,0 +1,22 @@
+name: 위젯 요청
+description: 마켓에 있었으면 하는 위젯을 제안합니다
+title: "[요청] "
+labels: ["위젯 요청"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 어떤 위젯인가요?
+      description: Dock에 무엇을 보여 주고, 누르면 무엇을 하면 좋을지 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: 데이터는 어디서 오나요?
+      description: 예) 특정 웹 API, 이 Mac의 명령어 출력, 앱 내장 정보 등. 필요한 권한(셸·네트워크)도 알면 적어 주세요.
+  - type: textarea
+    id: extra
+    attributes:
+      label: 참고 자료
+      description: 비슷한 위젯, 스크린샷, 링크 등
