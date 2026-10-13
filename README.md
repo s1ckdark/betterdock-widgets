@@ -14,6 +14,10 @@
 **커뮤니티 위젯**은 사용자 위젯 폴더에 설치된다. 셸·네트워크 권한을 쓰면 앱의 권한 승인
 대화상자를 거친다. 공식 위젯의 캘린더·음악·키체인 같은 macOS 권한도 별도로 승인해야 한다.
 
+별점(1~5점), 설치별 익명 리뷰와 다운로드 수는 별도 마켓 API가 저장·조회한다. 서명된 정적
+`index.json`에는 통계를 넣지 않는다. 다운로드 수는 설치 완료 보고를 기준으로 하며,
+페이지 조회나 목록 다운로드를 설치로 세지 않는다.
+
 ## 신뢰 모델
 
 1. **검토.** 위젯은 PR로만 들어온다. 메인테이너가 [검토 목록](.github/pull_request_template.md)에
@@ -104,6 +108,8 @@ Official and community widget marketplace for **betterDock**, a macOS Dock app w
   bundled definition executes. Update the app if it does not contain the listed version.
   Community widgets retain the app's normal shell/network consent and folder-integrity checks.
   Native macOS permissions for official widgets remain separate.
+- **Community feedback:** ratings (1–5), one editable anonymous review per installation, and
+  completed-install download counts are served by the separate market API, not the signed index.
 - **Trust:** every widget is reviewed by the maintainer via PR. The index is signed with a key
   that lives only in the maintainer's Mac Keychain — never in this repo or CI. The signed index
   expires 30 days after signing (`expiresAt`); the maintainer re-signs it at least monthly
