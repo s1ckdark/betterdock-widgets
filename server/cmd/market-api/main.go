@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"errors"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/s1ckdark/betterdock-widgets/server/internal/market"
 	"io"
@@ -14,6 +16,10 @@ import (
 )
 
 func main() {
+	tlsConfig, err := loadTLSConfig(os.Getenv("TLS_CERT_FILE"), os.Getenv("TLS_KEY_FILE"))
+	if err != nil {
+		log.Fatal("TLS certificate configuration is invalid")
+	}
 	catalog, err := market.LoadCatalog(env("CATALOG_PATH", "/catalog/index.json"), env("CATALOG_SIGNATURE_PATH", "/catalog/index.json.sig"))
 	if err != nil {
 		log.Fatal("signed catalog could not be loaded")
@@ -55,7 +61,7 @@ func main() {
 		log.Fatal("verified catalog history could not be recorded")
 	}
 	api := market.NewAPI(store, catalog, proxies)
-	server := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: api.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16 << 10, ErrorLog: log.New(io.Discard, "", 0)}
+	server := &http.Server{TLSConfig: tlsConfig, Addr: env("LISTEN_ADDR", ":8080"), Handler: api.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16 << 10, ErrorLog: log.New(io.Discard, "", 0)}
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
@@ -65,7 +71,14 @@ func main() {
 		_ = server.Shutdown(ctx)
 	}()
 	log.Printf("market API ready; catalog sequence=%d widgets=%d", catalog.Sequence, len(catalog.Versions))
-	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+	if tlsConfig != nil {
+		// The key pair was loaded before database access. Empty paths reuse the
+		// in-memory certificate and never silently fall back to plaintext HTTP.
+		err = server.ListenAndServeTLS("", "")
+	} else {
+		err = server.ListenAndServe()
+	}
+	if err != nil && err != http.ErrServerClosed {
 		log.Fatal("HTTP server failed")
 	}
 }
@@ -74,4 +87,20 @@ func env(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+// Native HTTPS is optional for loopback test deployments, but partial or
+// unreadable TLS configuration is an error rather than a plaintext fallback.
+func loadTLSConfig(certFile, keyFile string) (*tls.Config, error) {
+	if certFile == "" && keyFile == "" {
+		return nil, nil
+	}
+	if certFile == "" || keyFile == "" {
+		return nil, errors.New("both TLS files are required")
+	}
+	certificate, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return nil, errors.New("TLS key pair could not be loaded")
+	}
+	return &tls.Config{MinVersion: tls.VersionTLS13, Certificates: []tls.Certificate{certificate}}, nil
 }

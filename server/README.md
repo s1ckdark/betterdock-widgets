@@ -25,14 +25,21 @@ Do not store a real connection string or token in this repository.
 | Environment | Meaning |
 | --- | --- |
 | `DATABASE_URL` | Required PostgreSQL DSN for the restricted app role. Supply through a protected env file or secret manager. |
-| `LISTEN_ADDR` | Default `:8080`; use `127.0.0.1:8787` with host networking behind a TLS proxy. |
+| `LISTEN_ADDR` | Default `:8080`; private deployment binds only the Tailscale IP, e.g. `100.125.85.81:8787`, with native TLS enabled. Loopback tests may use `127.0.0.1:8787` without TLS. |
+| `TLS_CERT_FILE` / `TLS_KEY_FILE` | Optional native HTTPS certificate/key PEM paths. Set both or neither. Both enable TLS 1.3 minimum; a missing/unreadable/mismatched pair aborts startup. Mount read-only and readable only by the runtime user. |
 | `CATALOG_PATH` | Default `/catalog/index.json`; mount the signed catalog read-only. |
 | `CATALOG_SIGNATURE_PATH` | Default `/catalog/index.json.sig`; mount detached base64 Ed25519 signature read-only. |
 | `TRUSTED_PROXY_CIDRS` | Comma-separated trusted immediate/forwarding proxy CIDRs, default none. For a local proxy use only `127.0.0.1/32,::1/128`. Never trust the Internet or a whole client subnet. |
 
-Publish only through HTTPS; the bearer token grants control of that installation's
-reviews. Bind HTTP to loopback (host networking) or a private container network,
-not a public port. Mount the catalog without granting write access. Container
+The community API is private to the Tailscale network: use native HTTPS bound
+only to the node's Tailscale IP and `https://racknerd:8787`, with a certificate
+whose DNS SAN contains `racknerd`. The desktop verifies the actual TLS peer,
+hostname, and pinned public certificate. Never expose it through Funnel or a
+public listener. The bearer token grants control of that installation's reviews.
+Keep the private key on the server; distribute only the public certificate.
+Certificates are loaded once at startup, so restart after rotation and coordinate
+any client pin update. Plain HTTP is for loopback tests/private proxy plumbing
+only. Mount the catalog without granting write access. Container
 runs as a non-root user. It works with `--read-only --cap-drop ALL
 --security-opt no-new-privileges`; the image doesn't write runtime files.
 

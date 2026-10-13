@@ -7,28 +7,36 @@ Runtime credentials stay in `~/services/betterdock-market/runtime.env` on the se
 They are not part of this repository or the application bundle.
 
 The non-root container is named `betterdock-market-api`. It uses host networking to reach the
-loopback PostgreSQL port and listens only on `127.0.0.1:8787`. Its filesystem is read-only,
-capabilities are dropped, and the catalog index and signature are mounted read-only.
-The public catalog files must be readable by the container user (mode 644); credential files
-remain private. The signed catalog is loaded at startup, and its verified versions are recorded
-for accepting delayed installation receipts after future catalog updates.
+loopback PostgreSQL port, but the API itself binds only to the confirmed Tailscale address
+`100.125.85.81:8787` (`LISTEN_ADDR`). Clients use `https://racknerd:8787` inside the same tailnet.
+No public listener, Funnel, reverse proxy, or extra privileged Tailscale configuration is needed.
+`TRUSTED_PROXY_CIDRS` is empty: requests arrive directly from tailnet peers, so forwarded client
+IP headers are ignored.
 
-Private readiness check:
+Native TLS is enabled with `TLS_CERT_FILE=/tls/server.crt` and `TLS_KEY_FILE=/tls/server.key`.
+Both paths must be set together. TLS 1.3 is required. The private EC key stays on RackNerd in
+`~/services/betterdock-market/tls/server.key` with mode 600 and is mounted read-only. Run the
+container as the same non-root UID that owns those files (`--user 1000:1000` in this deployment).
+The filesystem is read-only, capabilities are dropped, and the signed index is mounted read-only.
+Catalog files are public artifacts and must be readable by the container (mode 644).
+
+The application pins the public server certificate and also validates its hostname and dates.
+The current certificate covers `racknerd`, `racknerd.tail476516.ts.net`, and `100.125.85.81`.
+The app does not change system trust or disable HTTPS checks for other services. When rotating
+or renewing this certificate, distribute the new public pin in the app before replacing it;
+never copy the private key into the application or this repository.
+
+Readiness checks, using the public certificate as the trusted anchor (never `curl -k`):
 
 ```sh
-curl --fail http://127.0.0.1:8787/healthz
+curl --cacert ~/services/betterdock-market/tls/server.crt https://racknerd:8787/healthz
+curl --cacert ~/services/betterdock-market/tls/server.crt 'https://racknerd:8787/v1/widgets?ids=com.betterdock.clock'
 ```
 
-An administrator enables the dedicated HTTPS endpoint with:
-
-```sh
-sudo tailscale funnel --bg --https=8443 http://127.0.0.1:8787
-```
-
-This maps `https://racknerd.tail476516.ts.net:8443` to this API only. Keep existing Tailscale
-Serve routes intact; do not use `tailscale funnel reset`. Configure `TRUSTED_PROXY_CIDRS` only
-for the immediate proxy peers (`127.0.0.1/32,::1/128` for this deployment). Verify the public
-`/healthz` and `/v1/widgets?ids=com.betterdock.clock` endpoints after enabling it.
+Keep existing Tailscale Serve routes intact. API availability requires joining the same tailnet;
+widget catalog and package downloads remain available from the public signed GitHub repository.
+The signed catalog is loaded at startup, and verified versions are retained for delayed
+installation receipts after future catalog updates.
 
 For an update, validate and sign the market index, build the API image, run PostgreSQL tests,
 apply any additive schema migration as the owner, then replace only this container. Keep the
