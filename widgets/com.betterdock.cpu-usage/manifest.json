@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.cpu-usage",
+  "name": "CPU 사용률",
+  "version": "1.3.0",
+  "category": "system",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "shape",
+      "type": "choice",
+      "label": "모양",
+      "choices": [
+        "ring",
+        "bar"
+      ],
+      "default": "ring"
+    },
+    {
+      "key": "showValue",
+      "type": "bool",
+      "label": "실제 수치 표시",
+      "default": false
+    },
+    {
+      "key": "showLabel",
+      "type": "bool",
+      "label": "라벨 표시",
+      "default": true
+    },
+    {
+      "key": "labelLanguage",
+      "type": "choice",
+      "label": "위젯 언어",
+      "choices": [
+        "앱 설정 따름",
+        "한국어",
+        "English"
+      ],
+      "default": "앱 설정 따름"
+    },
+    {
+      "key": "valuePosition",
+      "type": "choice",
+      "label": "링 수치 위치",
+      "choices": [
+        "위쪽",
+        "아래쪽"
+      ],
+      "default": "아래쪽"
+    }
+  ],
+  "data": {
+    "source": {
+      "type": "builtin",
+      "kind": "system"
+    },
+    "refresh": {
+      "every": "5s",
+      "onWake": true
+    }
+  },
+  "compact": {
+    "gauge": "{{ .cpu }}",
+    "style": "{{ shape }}",
+    "label": "{{ .cpuLabel }}",
+    "tint": "accent",
+    "showValue": "{{ showValue }}",
+    "showLabel": "{{ showLabel }}",
+    "valuePosition": "{{ valuePosition }}"
+  }
+}

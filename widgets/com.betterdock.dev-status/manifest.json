@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.dev-status",
+  "name": "로컬 git·Docker 상태",
+  "version": "1.0.0",
+  "category": "developer",
+  "settingsDescription": "저장소 경로를 쉼표로 구분해 최대 5개까지 입력합니다. ~는 홈 폴더로 바뀝니다. 저장소를 누르면 Finder에서 엽니다.",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "repos",
+      "type": "string",
+      "label": "저장소 경로",
+      "default": ""
+    },
+    {
+      "key": "showDocker",
+      "type": "bool",
+      "label": "Docker 표시",
+      "default": true
+    }
+  ],
+  "data": {
+    "source": { "type": "builtin", "kind": "devStatus" },
+    "refresh": { "every": "60s", "onWake": true }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          { "icon": "folder.badge.plus", "size": 18, "tint": "muted" },
+          { "text": "{{ .emptyLabel }}", "style": "caption", "tint": "muted" }
+        ],
+        "when": "{{ .needsRepos }}",
+        "tooltip": "{{ .emptyTooltip }}",
+        "tap": { "configureWidget": "repos" }
+      },
+      {
+        "hstack": [
+          {
+            "hstack": [
+              { "icon": "arrow.triangle.branch", "size": 16, "tint": "success", "when": "{{ .isClean }}" },
+              { "icon": "arrow.triangle.branch", "size": 16, "tint": "warning", "when": "{{ .isDirty }}" },
+              { "icon": "exclamationmark.triangle", "size": 16, "tint": "danger", "when": "{{ .isError }}" },
+              { "text": "{{ .name }}", "style": "caption" },
+              { "text": "{{ .detail }}", "style": "caption", "tint": "muted" }
+            ],
+            "when": "{{ .opensURL }}",
+            "tooltip": "{{ .tooltip }}",
+            "tap": { "openURL": "{{ .url }}" }
+          },
+          {
+            "hstack": [
+              { "icon": "lock", "size": 16, "tint": "warning" },
+              { "text": "{{ .name }}", "style": "caption" },
+              { "text": "{{ .detail }}", "style": "caption", "tint": "muted" }
+            ],
+            "when": "{{ .needsAccess }}",
+            "tooltip": "{{ .tooltip }}",
+            "tap": { "configureWidget": "repos" }
+          }
+        ],
+        "forEach": "{{ .items }}",
+        "limit": 5
+      },
+      { "badge": "+{{ .extraCount }}", "tint": "muted", "when": "{{ .extraCount }}" },
+      {
+        "hstack": [
+          { "icon": "shippingbox.fill", "size": 16, "tint": "accent", "when": "{{ .dockerHealthy }}" },
+          { "icon": "shippingbox.fill", "size": 16, "tint": "warning", "when": "{{ .dockerUnhealthy }}" },
+          { "icon": "shippingbox", "size": 16, "tint": "muted", "when": "{{ .dockerInactive }}" },
+          { "text": "{{ .dockerLabel }}", "style": "caption", "tint": "muted" }
+        ],
+        "when": "{{ .showDocker }}",
+        "tooltip": "{{ .dockerTooltip }}"
+      }
+    ]
+  }
+}

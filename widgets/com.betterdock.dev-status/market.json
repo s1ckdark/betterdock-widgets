@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "로컬 Git 저장소와 Docker의 상태를 확인합니다.",
+    "en": "Check local Git repositories and Docker status."
+  },
+  "category": "developer",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/dev-status",
+  "distribution": "official"
+}

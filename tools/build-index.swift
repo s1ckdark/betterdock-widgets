@@ -30,10 +30,31 @@ let 인터프리터: [String: (flags: Set<String>, inline: String)] = [
     "/usr/bin/osascript": ([], "-e"),
 ]
 let 허용builtin: Set<String> = ["clock", "system", "battery", "systemMonitor"]
+// 공식 배포는 임의 패키지의 플래그만으로 허용하지 않는다. 앱과 함께 제공하는 17개 ID와
+// 각 ID의 소스 종류만 받는다. 앱은 설치 시 자신의 내장 manifest 바이트와도 대조한다.
+let 공식소스: [String: (type: String, kind: String?)] = [
+    "com.betterdock.agent-presence": ("builtin", "agents"),
+    "com.betterdock.ai-usage": ("builtin", "aiUsage"),
+    "com.betterdock.api-usage": ("builtin", "apiUsage"),
+    "com.betterdock.app-launcher": ("builtin", "appLauncher"),
+    "com.betterdock.bluetooth-battery": ("builtin", "bluetoothBattery"),
+    "com.betterdock.calendar": ("builtin", "calendar"),
+    "com.betterdock.clock": ("builtin", "clock"),
+    "com.betterdock.cpu-usage": ("builtin", "system"),
+    "com.betterdock.dev-status": ("builtin", "devStatus"),
+    "com.betterdock.disk-usage": ("builtin", "system"),
+    "com.betterdock.github-prs": ("http", nil),
+    "com.betterdock.memory-usage": ("builtin", "system"),
+    "com.betterdock.now-playing": ("builtin", "nowPlaying"),
+    "com.betterdock.settings": ("static", nil),
+    "com.betterdock.system-monitor": ("builtin", "systemMonitor"),
+    "com.betterdock.timer": ("builtin", "timer"),
+    "com.betterdock.weather": ("http", nil),
+]
 let 카테고리: Set<String> = ["system", "time", "developer", "apps", "other"]
 let 소스종류: Set<String> = ["static", "shell", "http", "builtin"]
 let 권한종류: Set<String> = ["network", "shell"]
-let market키: Set<String> = ["author", "description", "category", "version", "minAppVersion", "changelog", "homepage"]
+let market키: Set<String> = ["author", "description", "category", "version", "minAppVersion", "changelog", "homepage", "distribution"]
 let 유효기간: TimeInterval = 30 * 24 * 60 * 60
 let 갱신여유일 = 7
 
@@ -269,6 +290,16 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
 
     let manifest = try readObject(folder.appendingPathComponent("manifest.json"), name: "manifest.json")
     let market = try readObject(folder.appendingPathComponent("market.json"), name: "market.json")
+    let distribution: String
+    if let raw = market["distribution"] {
+        guard let value = raw as? String, ["official", "community"].contains(value) else {
+            throw fail("market.json distribution은 official 또는 community여야 한다")
+        }
+        distribution = value
+    } else {
+        distribution = "community"
+    }
+    let official = distribution == "official"
 
     // manifest.json
     guard let sv = manifest["schemaVersion"] as? NSNumber, !isBool(sv), sv.doubleValue == 1 else {
@@ -276,7 +307,14 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
     }
     guard let id = manifest["id"] as? String else { throw fail("manifest.json에 id가 없다") }
     guard id == folderName else { throw fail("manifest.json id(\(id))가 폴더 이름(\(folderName))과 같아야 한다") }
-    guard !id.hasPrefix(금지ID접두어) else { throw fail("id는 \(금지ID접두어)로 시작할 수 없다(내장 위젯 전용)") }
+    if official {
+        guard 공식소스[id] != nil else { throw fail("알 수 없는 공식 위젯 ID: \(id)") }
+        guard files == ["manifest.json", "market.json"] else {
+            throw fail("공식 위젯은 manifest.json과 market.json 두 파일만 배포한다")
+        }
+    } else {
+        guard !id.hasPrefix(금지ID접두어) else { throw fail("id는 \(금지ID접두어)로 시작할 수 없다(공식 위젯 전용)") }
+    }
     guard let name = nonEmptyString(manifest["name"]) else { throw fail("manifest.json에 name이 없다") }
     guard let version = manifest["version"] as? String, isSemver(version) else {
         throw fail("manifest.json version은 MAJOR.MINOR.PATCH 형식이어야 한다")
@@ -303,6 +341,11 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
     guard let data = manifest["data"] as? [String: Any], let source = data["source"] as? [String: Any],
           let type = source["type"] as? String else { throw fail("manifest.json에 data.source.type이 없다") }
     guard 소스종류.contains(type) else { throw fail("소스 type은 \(소스종류.sorted().joined(separator: ", ")) 중 하나여야 한다") }
+    if official, let expected = 공식소스[id] {
+        guard type == expected.type, source["kind"] as? String == expected.kind else {
+            throw fail("공식 위젯 \(id)의 소스는 \(expected.type)/\(expected.kind ?? "-")이어야 한다")
+        }
+    }
     guard let compact = manifest["compact"], compact is [String: Any] else { throw fail("manifest.json에 compact가 없다") }
 
     var shellArgv: [String]?
@@ -315,7 +358,7 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
         guard let url = source["url"] as? String else { throw fail("http 소스에 url이 없다") }
         httpOrigins = [try literalHTTPSOrigin(url, what: "http url")]
     case "builtin":
-        guard let kind = source["kind"] as? String, 허용builtin.contains(kind) else {
+        guard let kind = source["kind"] as? String, official || 허용builtin.contains(kind) else {
             throw fail("builtin 종류는 \(허용builtin.sorted().joined(separator: ", "))만 쓸 수 있다")
         }
         builtinKinds = [kind]
@@ -331,6 +374,9 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
         guard let s = value as? String else { throw fail("image 값은 문자열이어야 한다") }
         if s.lowercased().hasPrefix("http") {
             imageOrigins.insert(try literalHTTPSOrigin(s, what: "image"))
+        } else if official && hasTemplate(s) {
+            // 앱에 포함된 네이티브 소스가 제공하는 앱 로고 등. 정적 호스트로 표시하지 않는다.
+            continue
         } else if hasTemplate(s) {
             throw fail("로컬 이미지 경로에는 템플릿을 쓸 수 없다: \(s)")
         } else if relativeInside(s, files: files) == nil {
@@ -340,6 +386,10 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
     var openURLOrigins = Set<String>()
     for value in openURLs {
         guard let s = value as? String else { throw fail("openURL 값은 문자열이어야 한다") }
+        if official && hasTemplate(s) && !s.lowercased().hasPrefix("https://") {
+            // calendar/nowPlaying/devStatus의 런타임 URL은 builtinKinds에 드러난다.
+            continue
+        }
         openURLOrigins.insert(try literalHTTPSOrigin(s, what: "openURL"))
     }
 
@@ -349,7 +399,8 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
     guard permissions.contains("shell") == needsShell else {
         throw fail(needsShell ? "shell 소스는 permissions에 \"shell\"이 있어야 한다" : "shell 소스가 아닌데 \"shell\" 권한을 선언했다")
     }
-    guard permissions.contains("network") == needsNetwork else {
+    // 공식 네이티브 aiUsage/apiUsage도 네트워크를 쓴다. 선언된 권한은 그대로 요약한다.
+    guard official ? (!needsNetwork || permissions.contains("network")) : permissions.contains("network") == needsNetwork else {
         throw fail(needsNetwork ? "http 소스나 원격 이미지는 permissions에 \"network\"가 있어야 한다" : "네트워크를 쓰지 않는데 \"network\" 권한을 선언했다")
     }
 
@@ -389,7 +440,7 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
         fileList.append(["path": entry.path, "size": entry.size, "sha256": digest])
     }
 
-    return [
+    var result: [String: Any] = [
         "id": id,
         "name": name,
         "description": ["ko": ko, "en": en],
@@ -407,6 +458,9 @@ func buildEntry(folder: URL, folderName: String) throws -> [String: Any] {
         "changelog": changelog,
         "homepage": homepage,
     ]
+    // 생략된 distribution은 계속 community다. 기존 항목의 바이트 계약을 유지한다.
+    if official || market["distribution"] != nil { result["distribution"] = distribution }
+    return result
 }
 
 // MARK: - 실행

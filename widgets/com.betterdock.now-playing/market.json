@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "재생 중인 음악을 표시하고 재생·다음 곡을 제어합니다.",
+    "en": "See the current track and control playback and the next track."
+  },
+  "category": "apps",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/now-playing",
+  "distribution": "official"
+}

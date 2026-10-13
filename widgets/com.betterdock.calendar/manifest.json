@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.calendar",
+  "name": "다음 일정",
+  "version": "1.0.0",
+  "category": "time",
+  "settingsDescription": "오늘과 내일의 다음 일정을 보여 줍니다. 회의 링크(Zoom·Meet·Teams 등)가 있으면 눌러서 바로 참가하고, 없으면 캘린더에서 엽니다.",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "calendars",
+      "type": "multiChoice",
+      "label": "표시할 캘린더",
+      "options": "source"
+    },
+    {
+      "key": "lookaheadHours",
+      "type": "number",
+      "label": "미리 볼 시간 (시간)",
+      "min": 1,
+      "max": 48,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "key": "hideAllDay",
+      "type": "bool",
+      "label": "종일 일정 숨기기",
+      "default": true
+    }
+  ],
+  "data": {
+    "source": { "type": "builtin", "kind": "calendar" },
+    "refresh": { "every": "60s", "onWake": true }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          { "icon": "calendar.badge.exclamationmark", "size": 18, "tint": "warning" },
+          { "text": "{{ .accessLabel }}", "style": "caption" }
+        ],
+        "when": "{{ .needsAccess }}",
+        "tooltip": "{{ .accessTooltip }}",
+        "tap": { "requestAccess": "calendar" }
+      },
+      {
+        "hstack": [
+          { "icon": "calendar.badge.exclamationmark", "size": 18, "tint": "muted" },
+          { "text": "{{ .deniedLabel }}", "style": "caption", "tint": "muted" }
+        ],
+        "when": "{{ .denied }}",
+        "tooltip": "{{ .deniedTooltip }}",
+        "tap": { "openURL": "{{ .settingsURL }}" }
+      },
+      {
+        "hstack": [
+          { "icon": "calendar", "size": 18, "tint": "muted" },
+          { "text": "{{ .noEventLabel }}", "style": "caption", "tint": "muted" }
+        ],
+        "when": "{{ .noEvent }}",
+        "tooltip": "{{ .noEventTooltip }}"
+      },
+      {
+        "hstack": [
+          { "icon": "{{ .icon }}", "size": 18, "tint": "warning", "when": "{{ .isSoon }}" },
+          { "icon": "{{ .icon }}", "size": 18, "tint": "accent", "when": "{{ .isLater }}" },
+          { "text": "{{ .title }}", "style": "caption" },
+          { "text": "{{ .timeLabel }}", "style": "caption", "tint": "warning", "when": "{{ .isSoon }}" },
+          { "text": "{{ .timeLabel }}", "style": "caption", "tint": "muted", "when": "{{ .isLater }}" }
+        ],
+        "when": "{{ .hasEvent }}",
+        "tooltip": "{{ .tooltip }}",
+        "tap": { "openURL": "{{ .url }}" }
+      }
+    ]
+  }
+}

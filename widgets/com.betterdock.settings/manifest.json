@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.settings",
+  "name": "설정",
+  "version": "1.0.0",
+  "category": "apps",
+  "permissions": [],
+  "settings": [],
+  "data": {
+    "source": { "type": "static" },
+    "refresh": { "every": "1h", "onWake": false }
+  },
+  "compact": {
+    "icon": "gearshape",
+    "size": 20,
+    "tap": { "openSettings": true },
+    "tooltip": "{{ _openSettings }}"
+  }
+}

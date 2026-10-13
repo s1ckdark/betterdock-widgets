@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.clock",
+  "name": "시계",
+  "version": "1.0.0",
+  "category": "time",
+  "permissions": [],
+  "settings": [],
+  "data": {
+    "source": { "type": "builtin", "kind": "clock" },
+    "refresh": { "every": "5s", "onWake": true }
+  },
+  "compact": {
+    "text": "{{ pad(.hour, 2) }}:{{ pad(.minute, 2) }}",
+    "style": "title",
+    "tint": "neutral"
+  }
+}

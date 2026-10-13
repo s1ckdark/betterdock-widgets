@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.weather",
+  "name": "날씨",
+  "version": "1.0.0",
+  "category": "time",
+  "permissions": ["network"],
+  "settings": [
+    { "key": "latitude", "type": "number", "label": "위도", "default": 37.5665 },
+    { "key": "longitude", "type": "number", "label": "경도", "default": 126.978 }
+  ],
+  "data": {
+    "source": {
+      "type": "http",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude={{latitude}}&longitude={{longitude}}&current=temperature_2m"
+    },
+    "refresh": { "every": "10m", "onWake": true, "onNetworkChange": true }
+  },
+  "compact": {
+    "hstack": [
+      { "icon": "thermometer.medium", "tint": "accent" },
+      { "text": "{{ round(.current.temperature_2m, 0) }}°", "style": "title" }
+    ]
+  }
+}

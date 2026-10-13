@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "GitHub에서 나에게 리뷰를 요청한 열린 PR 수를 확인합니다.",
+    "en": "See open GitHub pull requests awaiting your review."
+  },
+  "category": "developer",
+  "version": "2.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/github-prs",
+  "distribution": "official"
+}

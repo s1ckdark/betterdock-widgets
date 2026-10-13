@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "AI 구독 사용 한도와 OpenRouter 계정 전체 잔액을 확인합니다.",
+    "en": "Track AI subscription limits and the account-wide OpenRouter balance."
+  },
+  "category": "developer",
+  "version": "1.7.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/ai-usage",
+  "distribution": "official"
+}

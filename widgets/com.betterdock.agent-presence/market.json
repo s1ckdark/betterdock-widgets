@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "AI 에이전트의 작업 상태와 실행 중인 세션을 표시합니다.",
+    "en": "See AI agent activity and running sessions."
+  },
+  "category": "developer",
+  "version": "1.8.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/agent-presence",
+  "distribution": "official"
+}

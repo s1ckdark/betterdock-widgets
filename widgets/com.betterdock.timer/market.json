@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "타이머와 포모도로 집중 시간을 관리합니다.",
+    "en": "Manage timers and Pomodoro focus sessions."
+  },
+  "category": "time",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/timer",
+  "distribution": "official"
+}

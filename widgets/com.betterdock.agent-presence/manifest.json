@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.agent-presence",
+  "name": "에이전트 현황",
+  "version": "1.8.0",
+  "category": "developer",
+  "settingsDescription": "에이전트 아이콘 크기를 16~64pt로 따로 조절합니다. 상태·로고·대체 기호에 적용되며 Dock 전체 배율과 별개입니다.",
+  "allowsMultipleInstances": true,
+  "instanceLabelSetting": "service",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "iconSize",
+      "type": "number",
+      "label": "아이콘 크기 (pt)",
+      "min": 16,
+      "max": 64,
+      "step": 0.1,
+      "default": 25.6
+    },
+    {
+      "key": "service",
+      "type": "choice",
+      "label": "서비스",
+      "default": "all",
+      "choices": ["all", "claude", "codex", "antigravity", "autoclaw", "zcode", "muse", "nanoclaw", "orca", "kiro", "aside", "cursor", "devin"]
+    }
+  ],
+  "data": {
+    "source": { "type": "builtin", "kind": "agents" },
+    "refresh": { "every": "5s", "onWake": true }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          { "icon": "{{ .icon }}", "size": "{{ .iconSize }}", "fitted": true, "tint": "warning", "when": "{{ .isWaiting }}" },
+          { "icon": "{{ .icon }}", "size": "{{ .workingIconSize }}", "fitted": true, "tint": "accent", "background": "accent", "when": "{{ .isWorking }}" },
+          { "icon": "{{ .icon }}", "size": "{{ .iconSize }}", "fitted": true, "tint": "muted", "when": "{{ .isIdle }}" },
+          { "text": "{{ .roles }}", "style": "caption", "tint": "muted", "when": "{{ .hasRoles }}" },
+          { "badge": "+{{ .hiddenRoles }}", "tint": "muted", "when": "{{ .hiddenRoles }}" }
+        ],
+        "forEach": "{{ .sessions }}",
+        "limit": 8
+      },
+      { "badge": "+{{ .hiddenCount }}", "tint": "muted", "when": "{{ .hiddenCount }}" },
+      { "divider": true, "when": "{{ .showsDivider }}" },
+      {
+        "hstack": [
+          { "image": "{{ .logo }}", "width": "{{ .iconSize }}", "height": "{{ .iconSize }}", "cornerRadius": "{{ .cornerRadius }}", "when": "{{ .hasLogo }}" },
+          { "icon": "{{ .icon }}", "size": "{{ .iconSize }}", "fitted": true, "tint": "muted", "when": "{{ .noLogo }}" },
+          { "badge": "{{ .count }}", "tint": "muted", "when": "{{ .showsCount }}" }
+        ],
+        "forEach": "{{ .presence }}",
+        "limit": 5
+      },
+      {
+        "hstack": [
+          { "icon": "eye.slash", "size": 11, "tint": "muted" },
+          { "badge": "{{ .unlinkedCount }}", "tint": "muted" }
+        ],
+        "when": "{{ .unlinkedCount }}"
+      }
+    ],
+    "iconScale": 1
+  }
+}

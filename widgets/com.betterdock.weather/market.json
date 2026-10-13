@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "설정한 위치의 현재 날씨를 확인합니다.",
+    "en": "See the current weather at your chosen location."
+  },
+  "category": "time",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/weather",
+  "distribution": "official"
+}

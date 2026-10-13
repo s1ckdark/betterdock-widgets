@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "OpenAI·Anthropic API 사용량과 비용을 확인합니다.",
+    "en": "Track OpenAI and Anthropic API usage and spending."
+  },
+  "category": "developer",
+  "version": "1.1.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/api-usage",
+  "distribution": "official"
+}

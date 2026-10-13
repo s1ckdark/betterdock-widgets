@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.timer",
+  "name": "타이머·포모도로",
+  "version": "1.0.0",
+  "category": "time",
+  "settingsDescription": "링이나 시간을 누르면 시작·일시정지하고, 옆의 화살표로 처음으로 되돌립니다. 단계가 끝나면 알림을 보냅니다. 앱을 다시 켜면 타이머는 처음 상태로 돌아갑니다.",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "mode",
+      "type": "choice",
+      "label": "모드",
+      "choices": ["포모도로", "카운트다운"],
+      "default": "포모도로"
+    },
+    {
+      "key": "workMinutes",
+      "type": "number",
+      "label": "집중 시간 (분)",
+      "min": 1,
+      "max": 90,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "key": "breakMinutes",
+      "type": "number",
+      "label": "휴식 시간 (분)",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "key": "countdownMinutes",
+      "type": "number",
+      "label": "카운트다운 시간 (분)",
+      "min": 1,
+      "max": 180,
+      "step": 1,
+      "default": 10
+    }
+  ],
+  "data": {
+    "source": { "type": "builtin", "kind": "timer" },
+    "refresh": { "every": "1h" }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          { "countdown": "{{ .countdown }}", "style": "ring", "centerIcon": "{{ .toggleIcon }}", "tint": "warning", "when": "{{ .isWork }}" },
+          { "countdown": "{{ .countdown }}", "style": "ring", "centerIcon": "{{ .toggleIcon }}", "tint": "success", "when": "{{ .isRest }}" },
+          { "countdown": "{{ .countdown }}", "style": "ring", "centerIcon": "{{ .toggleIcon }}", "tint": "accent", "when": "{{ .isCountdown }}" },
+          { "countdown": "{{ .countdown }}", "style": "text", "tint": "neutral", "when": "{{ .isRunning }}" },
+          { "countdown": "{{ .countdown }}", "style": "text", "tint": "muted", "when": "{{ .isStopped }}" }
+        ],
+        "tooltip": "{{ .tooltip }}",
+        "tap": { "timerToggle": true }
+      },
+      {
+        "icon": "arrow.counterclockwise",
+        "size": 14,
+        "tint": "muted",
+        "when": "{{ .canReset }}",
+        "tooltip": "{{ .resetTooltip }}",
+        "tap": { "timerReset": true }
+      }
+    ]
+  }
+}

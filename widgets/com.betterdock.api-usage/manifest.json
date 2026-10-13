@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.api-usage",
+  "name": "AI API 사용량",
+  "version": "1.1.0",
+  "category": "developer",
+  "settingsDescription": "API 조직 전체의 보고된 비용과 언어 모델 토큰을 조회합니다. 구독 한도·로컬 기록과 별개이며, 일반 모델 호출 키 대신 사용량 조회 권한이 있는 관리자 API 키가 필요합니다.",
+  "permissions": ["network"],
+  "settings": [
+    { "key": "provider", "type": "choice", "label": "API 제공자", "choices": ["openai", "anthropic"], "default": "openai" },
+    { "key": "period", "type": "choice", "label": "API 집계 기간 (UTC)", "choices": ["today", "month"], "default": "today" },
+    { "key": "openaiAdminKey", "type": "secret", "label": "OpenAI 관리자 API 키", "visibleWhen": { "setting": "provider", "value": "openai" } },
+    { "key": "anthropicAdminKey", "type": "secret", "label": "Anthropic 관리자 API 키", "visibleWhen": { "setting": "provider", "value": "anthropic" } },
+    { "key": "labelLanguage", "type": "choice", "label": "위젯 언어", "choices": ["앱 설정 따름", "한국어", "English"], "default": "앱 설정 따름" }
+  ],
+  "data": {
+    "source": { "type": "builtin", "kind": "apiUsage" },
+    "refresh": { "every": "5m", "onWake": true, "onNetworkChange": true }
+  },
+  "compact": { "metricCard": "{{ .card }}", "tooltip": "{{ .tooltip }}" },
+  "allowsMultipleInstances": true,
+  "instanceLabelSetting": "provider"
+}

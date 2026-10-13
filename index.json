@@ -1,9 +1,740 @@
 {
-  "expiresAt" : "2026-11-11T14:41:17Z",
-  "generatedAt" : "2026-10-12T14:41:17Z",
+  "expiresAt" : "2026-11-12T04:06:17Z",
+  "generatedAt" : "2026-10-13T04:06:17Z",
   "schemaVersion" : 1,
-  "sequence" : 2,
+  "sequence" : 3,
   "widgets" : [
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "agents"
+      ],
+      "category" : "developer",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "See AI agent activity and running sessions.",
+        "ko" : "AI 에이전트의 작업 상태와 실행 중인 세션을 표시합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "9d2a2e4cec1053a93a8e0a69e645e2a9ed0d1d3e8b4668797d551fd550f94ac2",
+          "size" : 2595
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "586b48f52ae67230cdb98666c4505cf6096d986355a5c0d24866e5ed166cf821",
+          "size" : 530
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/agent-presence",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.agent-presence",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "에이전트 현황",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.8.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "aiUsage"
+      ],
+      "category" : "developer",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Track AI subscription limits and the account-wide OpenRouter balance.",
+        "ko" : "AI 구독 사용 한도와 OpenRouter 계정 전체 잔액을 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "96729d292a49dbe272e957cd694d06fcc4d1503ac675386f88a5b841082c24f5",
+          "size" : 2870
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "dec2c1f99d5dc6aed09139548944581d756b76a47faca6a70cd2ac6737122185",
+          "size" : 552
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/ai-usage",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.ai-usage",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "AI 구독·기록",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+        "network"
+      ],
+      "shell" : null,
+      "version" : "1.7.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "apiUsage"
+      ],
+      "category" : "developer",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Track OpenAI and Anthropic API usage and spending.",
+        "ko" : "OpenAI·Anthropic API 사용량과 비용을 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "077eb35e851a15dd099bffca13d28553f29461d164ae2cc6961dca857f3b8859",
+          "size" : 1477
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "bd39270534078ae4878c8601fe566a85b565baec7591304af202524dc14e0973",
+          "size" : 517
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/api-usage",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.api-usage",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "AI API 사용량",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+        "network"
+      ],
+      "shell" : null,
+      "version" : "1.1.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "appLauncher"
+      ],
+      "category" : "apps",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Launch selected apps with adjustable icon sizes.",
+        "ko" : "선택한 앱을 원하는 아이콘 크기로 표시하고 실행합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "52acf96dec0aa7b6ba6205af8a44b0398215ae5db905b7785764d1a079efd508",
+          "size" : 2064
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "755201d21c419c192601cb8b02499e6a1fde434d7d2eff271987d385a3e6129a",
+          "size" : 528
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/app-launcher",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.app-launcher",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "앱 런처",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.3.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "bluetoothBattery"
+      ],
+      "category" : "system",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Show battery levels for connected Bluetooth devices.",
+        "ko" : "연결된 블루투스 기기의 배터리 잔량을 표시합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "6ed95613b2e1f4cfdad2c7e0f371b819cfdbf9759d1408173c5804b1c86c8a20",
+          "size" : 3265
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "f89fc941aceb639747837800894419738dc6d5f6c467f4d16bd352b75bb13514",
+          "size" : 532
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/bluetooth-battery",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.bluetooth-battery",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "블루투스 배터리",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.3.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "calendar"
+      ],
+      "category" : "time",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Show upcoming events from selected calendars.",
+        "ko" : "선택한 캘린더의 다음 일정을 표시합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "3ae5002d12d5e747fc329e40c951e31bf89e07279954135724c768ffccc477df",
+          "size" : 2531
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "e761facd5e7a058b8acfc479bd1d81c230cf396c7c43c9c8d750a356b6ac5cd7",
+          "size" : 501
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/calendar",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.calendar",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "다음 일정",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "clock"
+      ],
+      "category" : "time",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Show the current date and time.",
+        "ko" : "현재 날짜와 시간을 표시합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "a0a847c28abeb1b680ebb671764eb2a6df6f56600cc8a1b74f7a53aadf95a218",
+          "size" : 401
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "fb25d106bb88218de8bc66572079b6e6a56e058e1a777601d7f504bc3c0c3bf8",
+          "size" : 471
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/clock",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.clock",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "시계",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "system"
+      ],
+      "category" : "system",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Monitor current CPU utilization.",
+        "ko" : "CPU 사용률을 실시간으로 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "4526d16cef6b82cda138eb6931c8bb27593363eb2a2757d1a22454e566b67ffe",
+          "size" : 1406
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "0a15ee8e3fe716c2baf5fd6ca9e362b37c98315f0eb5b122457f27d90295f7d2",
+          "size" : 484
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/cpu-usage",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.cpu-usage",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "CPU 사용률",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.3.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "devStatus"
+      ],
+      "category" : "developer",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Check local Git repositories and Docker status.",
+        "ko" : "로컬 Git 저장소와 Docker의 상태를 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "aa2ab5592e5c41c359ef5f43fb22f8103d764d7eef6389076e63e791205da1e0",
+          "size" : 2858
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "dd38e2e401bca695f32f88390be72d8552d540a1d17d32252f4bb20213c3aa23",
+          "size" : 514
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/dev-status",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.dev-status",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "로컬 git·Docker 상태",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "system"
+      ],
+      "category" : "system",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Monitor disk usage and remaining space.",
+        "ko" : "디스크 사용량과 남은 공간을 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "f43f8638c37d4a7ef74a835365133a55d336d9922da72b6f134bbc3ceb6e9b17",
+          "size" : 1414
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "fc553a9085678ad89fae2c312888bb862da3e53570bebf1befb36fb92188005d",
+          "size" : 499
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/disk-usage",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.disk-usage",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "디스크 사용량",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.3.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+
+      ],
+      "category" : "developer",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "See open GitHub pull requests awaiting your review.",
+        "ko" : "GitHub에서 나에게 리뷰를 요청한 열린 PR 수를 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "7da9de67edcb518fe5aba65b76a3e7382e550f6408a33da5fff4cd03ab12fa4b",
+          "size" : 1077
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "5a086cbb982dd88a3752d9b0d767c19554b5a0c88ec6a1e56a398aaf89c29b94",
+          "size" : 534
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/github-prs",
+      "httpOrigins" : [
+        "https://api.github.com"
+      ],
+      "id" : "com.betterdock.github-prs",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "GitHub PR",
+      "openURLOrigins" : [
+        "https://github.com"
+      ],
+      "permissions" : [
+        "network"
+      ],
+      "shell" : null,
+      "version" : "2.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "system"
+      ],
+      "category" : "system",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Monitor current memory utilization.",
+        "ko" : "메모리 사용률을 실시간으로 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "50c72f447f1aa3d900b6bacd62512b29e6200df74344616b2be1de1452194e7b",
+          "size" : 1422
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "87bcf29e467e23a80199488fcbd2f8f933f25cfd88bfff56624dbf8d72a067bb",
+          "size" : 496
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/memory-usage",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.memory-usage",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "메모리 사용률",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.3.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "nowPlaying"
+      ],
+      "category" : "apps",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "See the current track and control playback and the next track.",
+        "ko" : "재생 중인 음악을 표시하고 재생·다음 곡을 제어합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "096b520739479badccb058e45d784d3ddaed5050baf55d6c10b3bf52515b8de2",
+          "size" : 2187
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "f76045b6cbefa174b8a80c5840a5a91165f4bf569b0315dacf2d5b1cbd3fe701",
+          "size" : 540
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/now-playing",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.now-playing",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "재생 중인 음악",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+
+      ],
+      "category" : "apps",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Open betterDock settings directly from the Dock.",
+        "ko" : "Dock에서 betterDock 설정을 바로 엽니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "011957ae7257b35fda3818fc3c0ca83c26e152e2994f5f982f29db73554b7bd6",
+          "size" : 401
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "3332adfd63c988784caeb88d63cef5f494ca6c5b6c816f8a5691b2e7a652f1f5",
+          "size" : 497
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/settings",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.settings",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "설정",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "systemMonitor"
+      ],
+      "category" : "system",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Show selected system metrics including CPU and memory.",
+        "ko" : "CPU·메모리 등 선택한 시스템 정보를 함께 표시합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "937ff4911e119e8ac84295af2225f97c29f17514ebd3344fa3f931927da1f6e0",
+          "size" : 2555
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "abe6bce11fc1aa1835dc3700be455ad035c74b4d748b9bc2db35ede3526a1fda",
+          "size" : 534
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/system-monitor",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.system-monitor",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "시스템 모니터",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+        "timer"
+      ],
+      "category" : "time",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "Manage timers and Pomodoro focus sessions.",
+        "ko" : "타이머와 포모도로 집중 시간을 관리합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "0e55feb8fb6822fb1acf5da6efa688a43a791349fb5de93967fc136111ebc355",
+          "size" : 2270
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "cba3fcac34296d45e7b00b1992fa805a913b01cea5bb36463a6ddffd55acabab",
+          "size" : 498
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/timer",
+      "httpOrigins" : [
+
+      ],
+      "id" : "com.betterdock.timer",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "타이머·포모도로",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
+    {
+      "author" : "betterDock / s1ckdark",
+      "builtinKinds" : [
+
+      ],
+      "category" : "time",
+      "changelog" : "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+      "description" : {
+        "en" : "See the current weather at your chosen location.",
+        "ko" : "설정한 위치의 현재 날씨를 확인합니다."
+      },
+      "distribution" : "official",
+      "files" : [
+        {
+          "path" : "manifest.json",
+          "sha256" : "33c27b5428e624b6cf56e92afcc1248e3347af0a4c914cc5ea9b3f4978610769",
+          "size" : 782
+        },
+        {
+          "path" : "market.json",
+          "sha256" : "2f84cab612aa1d533e7b9adc95c8ad61e86a6e7bca788e141459d58c3b90722c",
+          "size" : 500
+        }
+      ],
+      "homepage" : "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/weather",
+      "httpOrigins" : [
+        "https://api.open-meteo.com"
+      ],
+      "id" : "com.betterdock.weather",
+      "imageOrigins" : [
+
+      ],
+      "minAppVersion" : "0.1.0",
+      "name" : "날씨",
+      "openURLOrigins" : [
+
+      ],
+      "permissions" : [
+        "network"
+      ],
+      "shell" : null,
+      "version" : "1.0.0"
+    },
     {
       "author" : "s1ckdark",
       "builtinKinds" : [

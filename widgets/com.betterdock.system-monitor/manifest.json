@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.system-monitor",
+  "name": "시스템 모니터",
+  "version": "1.0.0",
+  "category": "system",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "metrics",
+      "type": "multiChoice",
+      "label": "표시할 지표",
+      "choices": [
+        "cpu",
+        "gpu",
+        "disk",
+        "network"
+      ],
+      "default": [
+        "cpu",
+        "gpu",
+        "disk",
+        "network"
+      ]
+    },
+    {
+      "key": "style",
+      "type": "choice",
+      "label": "게이지 모양",
+      "choices": [
+        "링",
+        "막대"
+      ],
+      "default": "링"
+    },
+    {
+      "key": "showLabel",
+      "type": "bool",
+      "label": "이름 표시",
+      "default": true
+    },
+    {
+      "key": "showValue",
+      "type": "bool",
+      "label": "수치 표시",
+      "default": true
+    },
+    {
+      "key": "labelLanguage",
+      "type": "choice",
+      "label": "위젯 언어",
+      "choices": [
+        "앱 설정 따름",
+        "한국어",
+        "English"
+      ],
+      "default": "앱 설정 따름"
+    }
+  ],
+  "data": {
+    "source": {
+      "type": "builtin",
+      "kind": "systemMonitor"
+    },
+    "refresh": {
+      "every": "5s",
+      "onWake": true
+    }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          {
+            "gauge": "{{ .value }}",
+            "style": "{{ style }}",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .label }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "tint": "accent",
+            "when": "{{ .isCpu }}"
+          },
+          {
+            "gauge": "{{ .value }}",
+            "style": "{{ style }}",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .label }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "tint": "success",
+            "when": "{{ .isGpu }}"
+          },
+          {
+            "gauge": "{{ .value }}",
+            "style": "{{ style }}",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .label }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "tint": "warning",
+            "when": "{{ .isDisk }}"
+          },
+          {
+            "text": "{{ .text }}",
+            "style": "caption",
+            "tint": "neutral",
+            "when": "{{ .isNetwork }}"
+          }
+        ]
+      }
+    ],
+    "forEach": "{{ .items }}",
+    "limit": 4
+  }
+}

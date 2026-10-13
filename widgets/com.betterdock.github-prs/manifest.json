@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.github-prs",
+  "name": "GitHub PR",
+  "version": "2.0.0",
+  "category": "developer",
+  "permissions": ["network"],
+  "settings": [
+    { "key": "token", "type": "secret", "label": "GitHub 토큰" }
+  ],
+  "retiredSettings": ["repo"],
+  "data": {
+    "source": {
+      "type": "http",
+      "url": "https://api.github.com/search/issues?q=is%3Aopen+is%3Apr+review-requested%3A%40me&per_page=1",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+      }
+    },
+    "refresh": { "every": "2m", "onWake": true, "onNetworkChange": true }
+  },
+  "compact": {
+    "hstack": [
+      { "icon": "arrow.triangle.pull", "tint": "accent" },
+      { "badge": "{{ .total_count }}", "tint": "accent", "when": "{{ .total_count }}" },
+      { "badge": "0", "tint": "muted", "when": "{{ not(.total_count) }}" }
+    ],
+    "tap": { "openURL": "https://github.com/search?q=is%3Aopen+is%3Apr+review-requested%3A%40me&type=pullrequests" }
+  }
+}

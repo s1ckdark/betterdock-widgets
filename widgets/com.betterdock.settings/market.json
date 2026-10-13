@@ -1,0 +1,13 @@
+{
+  "author": "betterDock / s1ckdark",
+  "description": {
+    "ko": "Dock에서 betterDock 설정을 바로 엽니다.",
+    "en": "Open betterDock settings directly from the Dock."
+  },
+  "category": "apps",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.0",
+  "changelog": "betterDock 공식 위젯 · 앱에 포함된 동일 버전의 정의로 설치합니다.",
+  "homepage": "https://github.com/s1ckdark/betterDock/tree/main/Resources/BuiltinWidgets/settings",
+  "distribution": "official"
+}

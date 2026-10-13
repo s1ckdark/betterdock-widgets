@@ -47,7 +47,8 @@
 
 | 키 | 형식 | 출처 |
 |---|---|---|
-| `id` | 문자열 | `manifest.json`의 `id` = 폴더 이름. `^[a-z0-9][a-z0-9._-]{0,63}$`, `com.betterdock.` 접두어 금지 |
+| `id` | 문자열 | `manifest.json`의 `id` = 폴더 이름. `^[a-z0-9][a-z0-9._-]{0,63}$`. `com.betterdock.`은 허용 목록에 있는 공식 위젯만 사용 |
+| `distribution` | 문자열(선택) | `official` 또는 `community`. 생략하면 `community`. 서명 대상이며 ID만으로 공식 여부를 판단하지 않는다 |
 | `name` | 문자열 | `manifest.json`의 `name` |
 | `description` | `{ "ko", "en" }` | `market.json` |
 | `author` | 문자열 | `market.json` |
@@ -58,8 +59,8 @@
 | `shell` | `{ "argv": [...] }` 또는 `null` | 셸 소스면 `[command, ...args]`를 **매니페스트에 적힌 그대로**(스크립트는 폴더 기준 상대 경로). 앱은 실행할 때 강제 옵션(`python3 -I -B`, `zsh -f`)을 붙이고 스크립트를 절대 경로로 바꾼다 |
 | `httpOrigins` | 문자열 배열 | `http` 소스의 `https://host[:port]` |
 | `imageOrigins` | 문자열 배열 | `compact`에 고정으로 적힌 원격 이미지의 `https://host[:port]`, 정렬·중복 제거 |
-| `openURLOrigins` | 문자열 배열 | `compact`의 탭 동작 `openURL`에 적힌 주소의 `https://host[:port]`, 정렬·중복 제거 |
-| `builtinKinds` | 문자열 배열 | `builtin` 소스의 `kind` |
+| `openURLOrigins` | 문자열 배열 | `compact`의 탭 동작 `openURL`에 고정으로 적힌 주소의 `https://host[:port]`, 정렬·중복 제거 |
+| `builtinKinds` | 문자열 배열 | `builtin` 소스의 `kind`. 공식 위젯은 `aiUsage`·`calendar` 등 앱의 네이티브 종류도 포함 |
 | `files` | 배열 | 위젯 폴더의 모든 일반 파일(`.DS_Store` 제외). `path`의 UTF-8 바이트 순 |
 | `files[].path` | 문자열 | 폴더 기준 상대 경로. 각 부분은 `^[A-Za-z0-9_-][A-Za-z0-9._-]*$` |
 | `files[].size` | 정수 | 바이트 |
@@ -70,6 +71,27 @@
 `permissions`·`shell`·`httpOrigins`·`imageOrigins`·`openURLOrigins`·`builtinKinds`는 마켓 화면에서 설치 전에
 보여 주기 위한 요약이다. 실제 권한 판정은 앱이 내려받은 `manifest.json`으로 다시 한다.
 요약이 매니페스트에서 다시 만든 값과 하나라도 다르면 앱은 설치하지 않는다.
+
+공식 위젯의 네이티브 소스(`aiUsage`·`apiUsage` 등)는 `http` 소스 없이도 `network` 권한을
+사용할 수 있다. 이 경우 `permissions`는 `["network"]`, `httpOrigins`는 빈 배열이며,
+`builtinKinds`가 실제 네이티브 기능을 나타낸다. 네이티브 소스가 생성하는 로컬 앱 로고나
+캘린더·설정 URL의 템플릿은 정적 호스트로 표시하지 않는다. 커뮤니티 위젯에는 이러한
+템플릿·네이티브 기능 예외를 적용하지 않는다.
+
+## 공식 배포 계약
+
+`distribution: "official"`인 항목은 `build-index.swift`에 정의된 17개 ID와 각각의 소스 종류를
+가져야 한다. 파일은 `manifest.json`과 `market.json`만 허용한다. `minAppVersion`은 기본
+형식 호환성을 나타낼 뿐, 최신 공식 위젯의 실행 호환성을 보장하지 않는다.
+
+앱은 서명·파일 해시·보안 요약 검증에 더해 **자신의 번들에 있는 동일 ID·버전 매니페스트의
+크기와 SHA-256**을 대조한다. 일치할 때만 설치하고, 실행에는 번들의 정의를 사용한다.
+앱에 없는 ID·버전·내용이면 앱 업데이트를 요구한다. `official` 플래그를 추가하거나 기존
+공식 ID를 복사해도 임의 매니페스트를 네이티브 권한으로 실행할 수 없다.
+
+`tools/sync-official-widgets.py --check --source <app>/Resources/BuiltinWidgets`로 17개 원본과
+패키지가 바이트 단위로 일치하는지 확인한다. 공식 매니페스트를 변경한 뒤에는 앱과 마켓을
+함께 갱신하고, 모든 검토가 끝나면 새 목록을 서명한다.
 
 ## 파일 내려받기
 

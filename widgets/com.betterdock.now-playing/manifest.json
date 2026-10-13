@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.now-playing",
+  "name": "재생 중인 음악",
+  "version": "1.0.0",
+  "category": "apps",
+  "settingsDescription": "이미 실행 중인 음악 앱이나 Spotify의 곡을 보여 주고 재생·다음 곡을 제어합니다. 꺼진 앱을 켜지 않습니다.",
+  "permissions": [],
+  "settings": [],
+  "data": {
+    "source": { "type": "builtin", "kind": "nowPlaying" },
+    "refresh": { "every": "5s", "onWake": true }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "icon": "music.note",
+        "size": 18,
+        "tint": "muted",
+        "when": "{{ .isIdle }}",
+        "tooltip": "{{ .idleTooltip }}"
+      },
+      {
+        "hstack": [
+          { "icon": "music.note", "size": 18, "tint": "warning" },
+          { "text": "{{ .permissionLabel }}", "style": "caption" }
+        ],
+        "when": "{{ .needsPermission }}",
+        "tooltip": "{{ .permissionTooltip }}",
+        "tap": { "requestAccess": "{{ .player }}" }
+      },
+      {
+        "hstack": [
+          { "icon": "music.note", "size": 18, "tint": "muted" },
+          { "text": "{{ .deniedLabel }}", "style": "caption", "tint": "muted" }
+        ],
+        "when": "{{ .isDenied }}",
+        "tooltip": "{{ .deniedTooltip }}",
+        "tap": { "openURL": "{{ .settingsURL }}" }
+      },
+      {
+        "hstack": [
+          { "icon": "music.note", "size": 18, "tint": "accent", "when": "{{ .isPlaying }}" },
+          { "icon": "music.note", "size": 18, "tint": "muted", "when": "{{ .isPaused }}" },
+          { "text": "{{ .title }}", "style": "caption" },
+          { "text": "{{ .artist }}", "style": "caption", "tint": "muted", "when": "{{ .artist }}" }
+        ],
+        "when": "{{ .isTrack }}",
+        "tooltip": "{{ .tooltip }}"
+      },
+      {
+        "icon": "{{ .playIcon }}",
+        "size": 16,
+        "when": "{{ .isTrack }}",
+        "tooltip": "{{ .playPauseTooltip }}",
+        "tap": { "mediaPlayPause": "{{ .player }}" }
+      },
+      {
+        "icon": "forward.fill",
+        "size": 16,
+        "when": "{{ .isTrack }}",
+        "tooltip": "{{ .nextTooltip }}",
+        "tap": { "mediaNext": "{{ .player }}" }
+      }
+    ]
+  }
+}

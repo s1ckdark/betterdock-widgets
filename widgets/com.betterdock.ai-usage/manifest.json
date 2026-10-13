@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.ai-usage",
+  "name": "AI 구독·기록",
+  "version": "1.7.0",
+  "category": "developer",
+  "settingsDescription": "구독 한도와 로컬 기록은 별개입니다. 로컬 기록의 과금 방식은 확인할 수 없으며 API 청구량을 뜻하지 않습니다. Z.AI 기록은 Coding Plan에서 조회합니다. OpenRouter는 Management Key로 계정 잔액(USD)을 조회하며 한도·기록 표시 옵션과 별개로 표시합니다. Cursor·Devin은 각 앱의 로그인으로 한도만 조회하며 토큰 기록은 없습니다.",
+  "permissions": [
+    "network"
+  ],
+  "settings": [
+    {
+      "key": "service",
+      "type": "multiChoice",
+      "label": "서비스",
+      "choices": ["claude", "codex", "zai", "antigravity", "cursor", "devin", "openrouter"],
+      "default": ["claude", "codex", "zai", "antigravity", "openrouter"]
+    },
+    {
+      "key": "zaiPlanKey",
+      "type": "secret",
+      "required": false,
+      "visibleWhen": { "setting": "service", "value": "zai" },
+      "label": "Z.AI Coding Plan API 키"
+    },
+    {
+      "key": "openrouterManagementKey",
+      "type": "secret",
+      "required": false,
+      "visibleWhen": { "setting": "service", "value": "openrouter" },
+      "label": "OpenRouter Management Key"
+    },
+    {
+      "key": "showQuota",
+      "type": "bool",
+      "label": "구독 한도 표시",
+      "default": true
+    },
+    {
+      "key": "showTokens",
+      "type": "bool",
+      "label": "사용 기록 표시 (로컬·플랜)",
+      "default": true
+    },
+    {
+      "key": "tokenPeriod",
+      "type": "choice",
+      "label": "토큰 집계 기간",
+      "choices": [
+        "today",
+        "month",
+        "all"
+      ],
+      "default": "today"
+    },
+    {
+      "key": "labelLanguage",
+      "type": "choice",
+      "label": "위젯 언어",
+      "choices": [
+        "앱 설정 따름",
+        "한국어",
+        "English"
+      ],
+      "default": "앱 설정 따름"
+    },
+    {
+      "key": "cardBackgroundOpacity",
+      "type": "number",
+      "label": "카드 배경 진하기 (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "key": "cardBorderWidth",
+      "type": "number",
+      "label": "카드 테두리 두께 (pt)",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "default": 0.5
+    }
+  ],
+  "data": {
+    "source": {
+      "type": "builtin",
+      "kind": "aiUsage"
+    },
+    "refresh": {
+      "every": "60s",
+      "onWake": true
+    }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "metricCard": "{{ .card }}",
+        "tooltip": "{{ .tooltip }}",
+        "tap": { "configureWidget": "{{ .configurationTarget }}" }
+      }
+    ],
+    "forEach": "{{ .items }}",
+    "limit": 7
+  },
+  "allowsMultipleInstances": true,
+  "instanceLabelSetting": "service"
+}

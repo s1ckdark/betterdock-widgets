@@ -15,7 +15,8 @@ widgets/
 ```
 
 - **`id`**: `^[a-z0-9][a-z0-9._-]{0,63}$`(소문자·숫자·`.`·`_`·`-`, 64자까지). 폴더 이름과
-  같아야 한다. **`com.betterdock.`으로 시작할 수 없다**(내장 위젯 전용). 다른 위젯과 겹치면 안 된다.
+  같아야 한다. 커뮤니티 위젯은 **`com.betterdock.`으로 시작할 수 없다**(공식 위젯 전용).
+  다른 위젯과 겹치면 안 된다.
 - **파일·폴더 이름**: 영문·숫자·`.`·`_`·`-`만 쓰고 `.`으로 시작할 수 없다(숨김 파일 금지).
   내려받는 URL에 그대로 들어가기 때문이다.
 - **심볼릭 링크 금지**(폴더 안 어디에도). 일반 파일과 폴더만 둔다.
@@ -45,12 +46,29 @@ widgets/
 | `minAppVersion` | ✓ | `MAJOR.MINOR.PATCH`. 이 위젯이 동작하는 가장 낮은 앱 버전 |
 | `changelog` | ✓ | 비어 있지 않은 문자열 |
 | `homepage` | | `https://` 주소 |
+| `distribution` | | `community` 또는 `official`. 생략하면 `community`. `official`은 아래 공식 위젯 규칙을 모두 만족해야 한다 |
 
 그 밖의 키는 거부한다.
 
-## 사용자 위젯 규칙 (앱이 강제하는 것)
+## 공식 위젯 규칙 (메인테이너 전용)
 
-마켓 위젯은 설치되면 **사용자 위젯**이다. 앱(`UserWidgetPolicy`)이 아래를 어긴 위젯은 불러오지
+공식 위젯 17개는 앱의 `Resources/BuiltinWidgets`와 동일한 매니페스트를 배포한다.
+`com.betterdock.` 접두어만으로 공식 위젯이 되지 않는다.
+
+- `distribution: "official"`과 `build-index.swift`의 **고정된 17개 ID·소스 종류**가 모두 맞아야 한다.
+- `manifest.json`과 `market.json` 두 파일만 허용한다. 스크립트·실행 파일·추가 자산은 넣지 않는다.
+- `python3 tools/sync-official-widgets.py --source <앱 저장소>/Resources/BuiltinWidgets`로 동기화한다.
+  같은 명령에 `--check`를 붙이면 변경 없이 원본과의 바이트 일치를 검사한다.
+- 공식 위젯은 앱에 구현된 네이티브 소스·동작·secret 설정과 네이티브 소스가 돌려주는 이미지·URL을
+  사용한다. 아래 커뮤니티용 builtin 제한을 적용하지 않는다. 선언된 권한, 네이티브 소스 종류,
+  정적인 HTTP·이미지·openURL 출처는 서명된 목록에 그대로 요약한다.
+- 앱은 서명만 믿지 않고 현재 앱에 포함된 동일 ID·버전의 매니페스트 크기·SHA-256도 확인한다.
+  내려받은 정의를 임의로 실행하지 않는다. 앱에 없는 버전은 앱 업데이트 후 설치할 수 있다.
+- 새 ID나 새 네이티브 기능을 넣을 때는 앱과 두 도구의 허용 목록을 함께 검토한다.
+
+## 커뮤니티 사용자 위젯 규칙 (앱이 강제하는 것)
+
+커뮤니티 마켓 위젯은 설치되면 **사용자 위젯**이다. 앱(`UserWidgetPolicy`)이 아래를 어긴 위젯은 불러오지
 않는다. `tools/build-index.swift`가 같은 규칙으로 미리 검사한다.
 
 ### `shell` 소스 — `permissions`에 `"shell"` 필요
@@ -96,7 +114,7 @@ widgets/
 - 탭 동작은 `openURL` · `launchApp`(사용자가 고른 앱만) · `openSettings` · `configureWidget`만
   동작한다. `requestAccess` · `mediaPlayPause` · `mediaNext` · `timerToggle` · `timerReset`은 쓸 수 없다.
 
-## 마켓 추가 규칙 (앱보다 좁다)
+## 커뮤니티 마켓 추가 규칙 (앱보다 좁다)
 
 | 규칙 | 이유 |
 |---|---|
@@ -112,6 +130,7 @@ widgets/
 
 ```sh
 swift tools/build-index.swift --validate
+python3 tools/test-market-validation.py
 ```
 
 - 스크립트를 직접 돌려 JSON이 나오는지 본다:

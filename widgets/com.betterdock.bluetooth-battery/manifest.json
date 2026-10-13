@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.bluetooth-battery",
+  "name": "블루투스 배터리",
+  "version": "1.3.0",
+  "category": "system",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "devices",
+      "type": "multiChoice",
+      "label": "표시할 기기",
+      "options": "source"
+    },
+    {
+      "key": "grouped",
+      "type": "bool",
+      "label": "하나로 묶어 표시",
+      "default": false
+    },
+    {
+      "key": "showLabel",
+      "type": "bool",
+      "label": "라벨 표시",
+      "default": false
+    },
+    {
+      "key": "showValue",
+      "type": "bool",
+      "label": "실제 수치 표시",
+      "default": false
+    },
+    {
+      "key": "labelLanguage",
+      "type": "choice",
+      "label": "위젯 언어",
+      "choices": [
+        "앱 설정 따름",
+        "한국어",
+        "English"
+      ],
+      "default": "앱 설정 따름"
+    },
+    {
+      "key": "valuePosition",
+      "type": "choice",
+      "label": "링 수치 위치",
+      "choices": [
+        "위쪽",
+        "아래쪽"
+      ],
+      "default": "아래쪽"
+    }
+  ],
+  "data": {
+    "source": {
+      "type": "builtin",
+      "kind": "bluetoothBattery"
+    },
+    "refresh": {
+      "every": "60s",
+      "onWake": true
+    }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          {
+            "gauge": "{{ .value }}",
+            "style": "ring",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .name }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "valuePosition": "{{ valuePosition }}",
+            "tint": "danger",
+            "when": "{{ .critical }}"
+          },
+          {
+            "gauge": "{{ .value }}",
+            "style": "ring",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .name }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "valuePosition": "{{ valuePosition }}",
+            "tint": "warning",
+            "when": "{{ .low }}"
+          },
+          {
+            "gauge": "{{ .value }}",
+            "style": "ring",
+            "centerIcon": "{{ .icon }}",
+            "label": "{{ .name }}",
+            "showLabel": "{{ showLabel }}",
+            "showValue": "{{ showValue }}",
+            "valuePosition": "{{ valuePosition }}",
+            "tint": "success",
+            "when": "{{ .normal }}"
+          },
+          {
+            "hstack": [
+              {
+                "icon": "{{ .icon }}",
+                "size": 18,
+                "tint": "muted"
+              },
+              {
+                "text": "{{ .name }}",
+                "style": "caption",
+                "tint": "muted",
+                "when": "{{ showLabel }}"
+              },
+              {
+                "text": "{{ .label }}",
+                "style": "caption",
+                "tint": "muted"
+              }
+            ],
+            "when": "{{ .unknown }}"
+          },
+          {
+            "badge": "+{{ .extraCount }}",
+            "tint": "muted",
+            "when": "{{ .extraCount }}"
+          }
+        ],
+        "tooltip": "{{ .tooltip }}"
+      }
+    ],
+    "forEach": "{{ .items }}",
+    "limit": 100
+  }
+}

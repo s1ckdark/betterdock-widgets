@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "com.betterdock.app-launcher",
+  "name": "앱 런처",
+  "version": "1.3.0",
+  "category": "apps",
+  "settingsDescription": "런처 아이콘 크기를 16~64pt로 따로 조절합니다. Dock 전체 배율과 별개이며, 전체 아이콘 크기 비율은 계속 적용됩니다.",
+  "permissions": [],
+  "settings": [
+    {
+      "key": "iconSize",
+      "type": "number",
+      "label": "아이콘 크기 (pt)",
+      "min": 16,
+      "max": 64,
+      "step": 0.1,
+      "default": 25.6
+    },
+    {
+      "key": "apps",
+      "type": "appList",
+      "label": "앱",
+      "default": [
+        {
+          "bundleId": "com.apple.Safari",
+          "path": "/Applications/Safari.app",
+          "enabled": true
+        },
+        {
+          "bundleId": "com.apple.Terminal",
+          "path": "/System/Applications/Utilities/Terminal.app",
+          "enabled": true
+        },
+        {
+          "bundleId": "com.apple.mail",
+          "path": "/System/Applications/Mail.app",
+          "enabled": true
+        },
+        {
+          "bundleId": "com.apple.iCal",
+          "path": "/System/Applications/Calendar.app",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "data": {
+    "source": {
+      "type": "builtin",
+      "kind": "appLauncher"
+    },
+    "refresh": {
+      "every": "1h"
+    }
+  },
+  "compact": {
+    "hstack": [
+      {
+        "hstack": [
+          {
+            "image": "{{ .logo }}",
+            "width": "{{ .iconSize }}",
+            "height": "{{ .iconSize }}",
+            "cornerRadius": "{{ .cornerRadius }}",
+            "tap": {
+              "launchApp": "{{ .bundleId }}"
+            },
+            "when": "{{ .hasLogo }}"
+          },
+          {
+            "icon": "{{ .icon }}",
+            "size": "{{ .fallbackSize }}",
+            "tint": "neutral",
+            "tap": {
+              "launchApp": "{{ .bundleId }}"
+            },
+            "when": "{{ .noLogo }}"
+          }
+        ]
+      }
+    ],
+    "iconScale": 1,
+    "forEach": "{{ .apps }}",
+    "limit": 12
+  }
+}

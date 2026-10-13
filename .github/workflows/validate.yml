@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Swift 버전
         run: swift --version
+      - name: 공식·커뮤니티 경계 회귀 검사
+        run: python3 tools/test-market-validation.py
       # PR: 기여자는 index.json을 고치지 않으므로 규칙 검사만 한다.
       - name: 위젯 규칙 검사
         if: github.event_name == 'pull_request'
