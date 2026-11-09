@@ -1,8 +1,8 @@
 {
-  "expiresAt" : "2026-11-12T04:06:17Z",
-  "generatedAt" : "2026-10-13T04:06:17Z",
+  "expiresAt" : "2026-12-09T15:06:28Z",
+  "generatedAt" : "2026-11-09T15:06:28Z",
   "schemaVersion" : 1,
-  "sequence" : 3,
+  "sequence" : 4,
   "widgets" : [
     {
       "author" : "betterDock / s1ckdark",
