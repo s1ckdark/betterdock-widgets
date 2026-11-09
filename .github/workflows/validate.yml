@@ -20,7 +20,8 @@ jobs:
   validate:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      # 태그는 옮겨질 수 있어 커밋 SHA로 고정한다(v4는 Node 20, v5부터 Node 24 런타임).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Swift 버전
         run: swift --version
       - name: 공식·커뮤니티 경계 회귀 검사
